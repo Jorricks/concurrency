@@ -1,0 +1,25 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Python distribution & packaging
+/build/
+/dist/
+*.egg-info/
+/.pytest_cache/
+.coverage
+data/
+
+# mac OS Finder detritus
+.DS_Store
+
+# IntelliJ project files
+/.idea/
+*.iml
+
+# Project specific
+/data/
+
+# Project exclude paths
+/venv/

@@ -1,0 +1,23 @@
+# IntelliJ project files.
+/.idea/
+**/*.iml
+
+# Git repo.
+/.git/
+
+# macOS Finder detritus
+**/.DS_Store
+
+# Python bytecode.
+**/__pycache__/
+**/*.py[cod]
+**/*.egg-info/
+
+# Python build.
+/build/
+/.pytest_cache/
+**/.coverage
+
+# Project specific
+/data/
+/venv/
