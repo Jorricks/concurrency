@@ -14,6 +14,8 @@ setup(
     install_requires=[
         "dataclasses-json==0.4.2",
         "fastapi==0.54.1",
+        "httpx==0.12.1",
+        "pillow==7.1.2",
         "pydantic==1.5.1",
         "redis==3.5.0",
     ],

@@ -10,7 +10,9 @@ import logging
 def start_worker(r: redis.Redis):
     logging.info('Starting up worker')
     job_types = {
-        'Fibonacci': wf.fibonacci
+        'Fibonacci': wf.fibonacci,
+        'DownloadImage': wf.download_image,
+        'ConvertImage': wf.convert_image,
     }
     logging.info(f'Worker registered the following job types:\n {list(job_types.keys())}')
 

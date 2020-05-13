@@ -4,6 +4,7 @@ from typing import Optional, Sequence
 
 import click
 
+from src.concurrier.make_requests import run_jobs
 from src.concurrier.util import create_redis_connection
 from src.concurrier.worker import start_worker
 from .restapi import get_app
@@ -42,6 +43,16 @@ def serve(host_redis: str, port_redis: int) -> Optional[int]:
 def worker(host_redis: str, port_redis: int) -> None:
     r = create_redis_connection(host_redis, port_redis)
     start_worker(r)
+
+
+@main.command()
+@click.option("-t", "--task", type=click.Choice(['download', 'thumbnail'], case_sensitive=False))
+@click.option("-u", "--url", default="http://localhost:8001")
+@click.option("-f", "--filename", default="open-images-dataset-train2.tsv")
+@click.option("-b", "--batch", default=1, type=int)
+@click.option("-n", "--no-jobs", default=1000, type=int)
+def dos(task: str, url: str, filename: str, batch: int, no_jobs: int) -> None:
+    return run_jobs(task=task, host=url, filename=filename, batch=batch, n=no_jobs)
 
 
 if __name__ == "__main__":

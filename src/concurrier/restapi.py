@@ -13,7 +13,7 @@ def get_app(r: redis.Redis()) -> FastAPI:
     def read_root():
         return {"Hello": "World"}
 
-    @app.put("/submitjob/")
+    @app.post("/submitjob/")
     def submit_job(type: str, arguments: str) -> str:
         job_id = f'job_{uuid.uuid4().hex}'
         r.rpush('jobs', RedisJob(job_id, type, arguments).to_json())
