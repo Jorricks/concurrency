@@ -12,12 +12,15 @@ setup(
     include_package_data=True,
     entry_points={"console_scripts": ["ConcurrierApi = src.concurrier.__main__:main"]},
     install_requires=[
+        "asgiref==3.2.7",
         "dataclasses-json==0.4.2",
         "fastapi==0.54.1",
         "httpx==0.12.1",
+        "numpy==1.18.4",
         "pillow==7.1.2",
         "pydantic==1.5.1",
         "redis==3.5.0",
+        "requests==2.23.0",
     ],
     extras_require={
         "test": test_dependencies,

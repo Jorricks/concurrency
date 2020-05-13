@@ -1,9 +1,18 @@
+import json
 import uuid
+import datetime as dt
 
 import redis
 from fastapi import FastAPI
+from pydantic.main import BaseModel
+from pydantic.typing import Dict
 
 from src.concurrier.redis_types import RedisJob, RedisResult
+
+
+class JobSubmission(BaseModel):
+    type: str
+    arguments: Dict
 
 
 def get_app(r: redis.Redis()) -> FastAPI:
@@ -14,10 +23,26 @@ def get_app(r: redis.Redis()) -> FastAPI:
         return {"Hello": "World"}
 
     @app.post("/submitjob/")
-    def submit_job(type: str, arguments: str) -> str:
+    def submit_job(*, submission: JobSubmission) -> str:
         job_id = f'job_{uuid.uuid4().hex}'
-        r.rpush('jobs', RedisJob(job_id, type, arguments).to_json())
-        r.set(job_id, RedisResult("queued", None, None).to_json())
+
+        r.set(
+            job_id,
+            RedisResult(
+                id=job_id,
+                status="queued",
+                result=None,
+                response=None,
+                queue_time=dt.datetime.now(),
+                start_time=None,
+                end_time=None,
+            ).to_json())
+        r.rpush('jobs',
+                RedisJob(
+                    id=job_id,
+                    job_type=submission.type,
+                    properties_raw=json.dumps(submission.arguments)
+                ).to_json())
         return job_id
 
     @app.get("/status/{job_id}")
@@ -27,10 +52,7 @@ def get_app(r: redis.Redis()) -> FastAPI:
             return 'Unknown job'
 
         job_status: RedisResult = RedisResult.from_json(job)
-        return {
-            "job_status": job_status.status,
-            "job_result": job_status.result,
-            "job_response": job_status.response,
-        }
+
+        return job_status.get_dict_with_ms_since_epoch()
 
     return app

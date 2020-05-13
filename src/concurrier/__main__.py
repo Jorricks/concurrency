@@ -40,19 +40,34 @@ def serve(host_redis: str, port_redis: int) -> Optional[int]:
 @main.command()
 @click.option("-h", "--host-redis", default="localhost")
 @click.option("-p", "--port-redis", default=6379)
-def worker(host_redis: str, port_redis: int) -> None:
+@click.option("-e", "--executor",
+              type=click.Choice(['sequential', 'threaded', 'async'], case_sensitive=False),
+              default='sequential')
+@click.option("-n", "--number-of-threads", default=10, help='Only present with threaded executor')
+def worker(host_redis: str, port_redis: int, executor: str, number_of_threads: int) -> None:
+    if executor == 'async':
+        raise NotImplementedError("Not implemented yet. This is for the future :)")
+
     r = create_redis_connection(host_redis, port_redis)
-    start_worker(r)
+    start_worker(r, executor, number_of_threads=number_of_threads)
 
 
 @main.command()
 @click.option("-t", "--task", type=click.Choice(['download', 'thumbnail'], case_sensitive=False))
 @click.option("-u", "--url", default="http://localhost:8001")
-@click.option("-f", "--filename", default="open-images-dataset-train2.tsv")
+@click.option("-f", "--filename", default="data/open-images-dataset-train2.tsv")
 @click.option("-b", "--batch", default=1, type=int)
 @click.option("-n", "--no-jobs", default=1000, type=int)
-def dos(task: str, url: str, filename: str, batch: int, no_jobs: int) -> None:
-    return run_jobs(task=task, host=url, filename=filename, batch=batch, n=no_jobs)
+@click.option("-o", "--html-file", default="results")
+def bench(task: str, url: str, filename: str, batch: int, no_jobs: int, html_file: str) -> None:
+    return run_jobs(
+        task=task,
+        host=url,
+        filename=filename,
+        batch=batch,
+        n=no_jobs,
+        html_file=html_file
+    )
 
 
 if __name__ == "__main__":
