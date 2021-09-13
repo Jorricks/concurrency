@@ -14,7 +14,7 @@ setup(
     install_requires=[
         "asgiref==3.2.7",
         "dataclasses-json==0.4.2",
-        "fastapi==0.54.1",
+        "fastapi==0.65.2",
         "httpx==0.12.1",
         "numpy==1.18.4",
         "pillow==8.3.2",
