@@ -18,7 +18,7 @@ setup(
         "httpx==0.12.1",
         "numpy==1.18.4",
         "pillow==8.3.2",
-        "pydantic==1.5.1",
+        "pydantic==1.6.2",
         "redis==3.5.0",
         "requests==2.23.0",
     ],
